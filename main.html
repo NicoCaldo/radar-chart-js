@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RadarChartJS.js - Modern Radar Chart Library</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <script src="chart.js"></script>
+  </head>
+  <body class="bg-gray-900 text-gray-100">
+    <nav
+      class="border-b border-gray-800 bg-gray-900/50 backdrop-blur-sm fixed w-full z-10"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center">
+            <span class="text-2xl font-bold text-blue-500">RadarChain.js</span>
+          </div>
+          <div class="flex items-center space-x-4">
+            <!--<a href="#demo" class="hover:text-blue-500 transition-colors"
+              >Demo</a
+            >
+            <a href="#docs" class="hover:text-blue-500 transition-colors"
+              >Docs</a
+            >-->
+            <a
+              href="https://github.com/yourusername/radarchain"
+              class="px-4 py-2 bg-blue-500 rounded-lg hover:bg-blue-600 transition-colors"
+              >GitHub</a
+            >
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <!-- Hero Section -->
+      <section class="pt-24 pb-12 px-4">
+        <div class="max-w-7xl mx-auto text-center">
+          <h1 class="text-5xl font-bold mb-6">
+            Beautiful Radar Charts<br />for Modern Web Apps
+          </h1>
+          <p class="text-xl text-gray-400 mb-12 max-w-2xl mx-auto">
+            A lightweight, responsive, and customizable radar chart library
+            built with vanilla JavaScript. Zero dependencies, smooth animations,
+            and modern design.
+          </p>
+        </div>
+      </section>
+
+      <!-- Demo Section -->
+      <section id="demo" class="py-12 px-4">
+        <div class="max-w-7xl mx-auto">
+          <div class="grid md:grid-cols-2 gap-8 items-center">
+            <div class="bg-gray-800 rounded-xl p-8">
+              <div id="demo-chart" class="w-full aspect-square"></div>
+            </div>
+            <div class="space-y-6">
+              <h2 class="text-3xl font-bold">Interactive Demo</h2>
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-400"
+                    >Add new data point</label
+                  >
+                  <div class="flex space-x-2 mt-2">
+                    <input
+                      type="text"
+                      id="newLabel"
+                      placeholder="Label"
+                      class="flex-1 bg-gray-800 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+                    />
+                    <input
+                      type="number"
+                      id="newValue"
+                      placeholder="Value"
+                      class="w-24 bg-gray-800 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+                    />
+                    <button
+                      onclick="addDataPoint()"
+                      class="px-4 py-2 bg-blue-500 rounded-lg hover:bg-blue-600 transition-colors"
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-400"
+                    >Remove data point</label
+                  >
+                  <div class="flex space-x-2 mt-2">
+                    <select
+                      id="removeLabel"
+                      class="flex-1 bg-gray-800 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+                    ></select>
+                    <button
+                      onclick="removeDataPoint()"
+                      class="px-4 py-2 bg-red-500 rounded-lg hover:bg-red-600 transition-colors"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Code Example -->
+      <section class="py-12 px-4 bg-gray-800/50">
+        <div class="max-w-7xl mx-auto">
+          <h2 class="text-3xl font-bold mb-8">Quick Start</h2>
+          <pre
+            class="bg-gray-900 p-6 rounded-xl overflow-x-auto"
+          ><code class="text-sm">// Initialize the chart
+const container = document.getElementById('radar-chart');
+const data = {
+  'Performance': 32,
+  'Security': 75,
+  'Usability': 78,
+  'Scalability': 45,
+  'Reliability': 88
+};
+
+const chart = new RadarChart(container, data);</code></pre>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      // Demo initialization
+      const demoData = {
+        Performance: 32,
+        Security: 75,
+        Usability: 78,
+        Scalability: 45,
+        Reliability: 88,
+      };
+
+      let chart;
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const container = document.getElementById("demo-chart");
+        chart = new RadarChart(container, demoData, { maxValue: 100 });
+        updateRemoveSelect();
+      });
+
+      function updateRemoveSelect() {
+        const select = document.getElementById("removeLabel");
+        select.innerHTML = "";
+        Object.keys(demoData).forEach((label) => {
+          const option = document.createElement("option");
+          option.value = label;
+          option.textContent = label;
+          select.appendChild(option);
+        });
+      }
+
+      function addDataPoint() {
+        const label = document.getElementById("newLabel").value;
+        const value = parseFloat(document.getElementById("newValue").value);
+
+        try {
+          chart.addDataPoint(label, value);
+          demoData[label] = value;
+          updateRemoveSelect();
+          document.getElementById("newLabel").value = "";
+          document.getElementById("newValue").value = "";
+        } catch (error) {
+          alert(error.message);
+        }
+      }
+
+      function removeDataPoint() {
+        const label = document.getElementById("removeLabel").value;
+
+        try {
+          chart.removeDataPoint(label);
+          delete demoData[label];
+          updateRemoveSelect();
+        } catch (error) {
+          alert(error.message);
+        }
+      }
+    </script>
+  </body>
+</html>
